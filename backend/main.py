@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Header, HTTPException
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import schemas
@@ -32,3 +32,16 @@ async def user_create(user: schemas.UserBase,
 @app.get("/api/users")
 def get_people(db: Session = Depends(get_db)):
     return db.query(models.User).all()
+
+
+@app.post("/send")
+def send_message(message: schemas.Message, db: Session = Depends(get_db),
+                 id: str | None = Header(default=None)):
+    print(id, 11111111111)
+    sender_id = id
+    recepient_id = view.get_user_by_id(db, message.recipient_id)
+    print(recepient_id)
+    if not recepient_id:
+        return HTTPException(status_code=400, detail='Not found')
+
+    return view.sending_message(db, sender_id, message)

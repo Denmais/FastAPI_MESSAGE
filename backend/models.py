@@ -26,7 +26,7 @@ class Message(Base):
     text = Column(String, index=True)
     sender_id = Column(Integer, ForeignKey("users.id"))
     recipient_id = Column(Integer, ForeignKey("users.id"))
-    sending_date = Column(DateTime, default=datetime)
+    sending_date = Column(DateTime, default=datetime.now)
 
     sender = relationship("User", foreign_keys=[sender_id])
     recipient = relationship("User", foreign_keys=[recipient_id])
